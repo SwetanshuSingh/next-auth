@@ -1,34 +1,41 @@
+"use client"
+
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
-import { RegisterSchema } from "@/schemas";
+import { FormEvent } from "react";
 
 export default function RegisterForm() {
 
-    const registerUser = async ( formData : FormData ) => {
-        "use server"
+    const registerUser = async (evt : FormEvent<HTMLFormElement>) => {
+        evt.preventDefault();        
+        const formData = new FormData(evt.currentTarget as HTMLFormElement);
 
-        const rawFormData = {
+        const userDetails = {
             username : formData.get("username"),
             email : formData.get("email"),
             password : formData.get("password")
         }
+    
+        const response = await fetch("/api/register", {
+            method : "POST",
+            headers : {
+                'Content-Type' : 'application/json'
+            },
+            body : JSON.stringify(userDetails)
+        });
 
-        const formVaildation = RegisterSchema.safeParse(rawFormData);
-
-        if(!formVaildation.success){
-            alert("Invalid Form Details")
-        }
-
+        const result = await response.json();
+        console.log(result);
     }
 
     return (
-        <form className="flex flex-col justify-center items-center gap-4" action={registerUser}>
+        <form className="flex flex-col justify-center items-center gap-4" action="/" onSubmit={(evt) => {registerUser(evt)}}>
             <Input className="bg-black" type="text" name="username" placeholder="Username" />
             <Input className="bg-black" type="text" name="email" placeholder="Email" />
-            <Input className="bg-black" type="text" name="password" placeholder="Password" />
-            <Button className="w-full" variant="secondary">Sign up</Button>
+            <Input className="bg-black" type="password" name="password" placeholder="Password" />
+            <Button className="w-full" variant="secondary" type="submit">Sign up</Button>
 
             <div className="w-full h-[0.5px] bg-gray-600"></div>
 
