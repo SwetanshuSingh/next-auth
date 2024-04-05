@@ -40,7 +40,7 @@ export default function RegisterForm() {
             toast({
                 title: "Success!",
                 description: result.message,
-              })
+              });
         }
     }
 
