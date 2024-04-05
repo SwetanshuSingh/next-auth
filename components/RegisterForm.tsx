@@ -4,8 +4,11 @@ import { Input } from "./ui/input";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { FormEvent } from "react";
+import { useToast } from "./ui/use-toast";
 
 export default function RegisterForm() {
+
+    const { toast } = useToast();
 
     const registerUser = async (evt : FormEvent<HTMLFormElement>) => {
         evt.preventDefault();        
@@ -26,7 +29,19 @@ export default function RegisterForm() {
         });
 
         const result = await response.json();
-        console.log(result);
+
+        if(response.status !== 200){
+            toast({
+                title: "Uh oh! Something went wrong.",
+                description: result.error,
+                variant : "destructive"
+              })
+        } else {
+            toast({
+                title: "Success!",
+                description: result.message,
+              })
+        }
     }
 
     return (
