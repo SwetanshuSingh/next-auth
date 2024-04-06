@@ -1,25 +1,6 @@
 import NextAuth from "next-auth";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { prisma } from "@/lib/db";
-import CredentialsProvider from "next-auth/providers/credentials"
+import { options } from "./options";
 
-const handler = NextAuth({
-  providers: [
-    CredentialsProvider({
-        name : "Credentials",
-        
-        async authorize(credentials, req) {
-
-        }
-    })
-  ],
-  pages: {
-    signIn: "/auth/login",
-  },
-  adapter: PrismaAdapter(prisma),
-  session: {
-    strategy: "jwt",
-  },
-});
+const handler = NextAuth(options);
 
 export { handler as GET, handler as POST };
